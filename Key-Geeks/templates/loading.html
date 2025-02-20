@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading Page</title>
+    <style>
+        body {
+            background-color: #d0d2fe;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: #434485;
+            font-size: 3rem; /* Increased size */
+            font-weight: bold;
+            margin-bottom: 40px; /* Increased gap */
+            transition: opacity 0.8s ease-in-out;
+        }
+
+        .loader {
+            display: flex;
+            transition: opacity 0.8s ease-in-out;
+        }
+
+        .dot {
+            width: 14px; /* Slightly larger */
+            height: 14px;
+            border-radius: 50%;
+            margin: 0 6px; /* Balanced spacing */
+            background-color: #3c3a68;
+            animation: blink 1.2s linear infinite;
+        }
+
+        .dot:nth-child(1) { animation-delay: 0s; }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+        .dot:nth-child(4) { animation-delay: 0.6s; }
+        .dot:nth-child(5) { animation-delay: 0.8s; }
+
+        @keyframes blink {
+            0%, 40%, 100% { opacity: 0.2; }
+            20% { opacity: 1; }
+        }
+
+        /* Blur Out Animation */
+        @keyframes blurOut {
+            0% { filter: blur(0px); opacity: 1; }
+            100% { filter: blur(10px); opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>ELVYRA</h1>
+
+    <div class="loader">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                // Add blur and fade-out effect
+                document.querySelector('.loader').style.animation = "blurOut 1s ease-in-out forwards";
+                document.querySelector('h1').style.animation = "blurOut 1s ease-in-out forwards";
+                
+                // Redirect after animation
+                setTimeout(() => {
+                    window.location.href = "{{ url_for('home') }}"; // Redirect to your homepage
+                }, 1000); // Delay to match blur effect
+            }, 3000); // Initial 3s delay before transition
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELVYRA - Login</title>
+    <style>
+        /* Page Styling */
+        body {
+            background:#d0d2fe;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 23px;
+            color: #434485;
+            margin-bottom: 25px;
+            position: relative;
+            top: -20px; /* Moves it slightly upwards */
+        }
+
+        /* Button Styling */
+        .login-btn {
+            background: linear-gradient(135deg, #434485, #6b73ff);
+            color: white;
+            font-size: 1rem; /* Smaller font size */
+            padding: 12px 30px; /* Adjusted padding */
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            display: block;
+            width: 200px; /* Reduced button width */
+            margin: 10px auto;
+            font-weight: normal; /* Normal text weight */
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Button Hover Animation */
+        .login-btn:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-btn::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.4s ease-in-out;
+        }
+
+        .login-btn:hover::after {
+            left: 100%;
+        }
+
+        /* OR separator */
+        .or-text {
+            font-size: 1rem;
+            font-weight: normal; /* Normal text weight */
+            color: #2e3279;
+            margin: 10px 0;
+            text-transform: lowercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to ELVYRA</h1>
+        <button class="login-btn" onclick="redirectToLogin('user')">Login as User</button>
+        <div class="or-text">or</div>
+        <button class="login-btn" onclick="redirectToLogin('trooper')">Login as Trooper</button>
+    </div>
+
+    <script>
+        function redirectToLogin(role) {
+            if (role === 'user') {
+                window.location.href = "{{ url_for('user_login') }}";
+            } else if (role === 'trooper') {
+                window.location.href = "{{ url_for('trooper_login') }}";
+            }
+        }
+    </script>
+</body>
+</html>
