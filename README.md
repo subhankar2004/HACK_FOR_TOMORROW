@@ -82,12 +82,13 @@ At the end of each day, submit a **pull request (PR)** with your updates:
 ---
 
 ## ⚠️ Rules & Best Practices
-✅ Commit frequently and use meaningful commit messages.
-✅ Keep your code organized inside your team folder.
-✅ Do not modify files outside your team folder.
-✅ Follow the deadline for PR submissions every day.
-✅ Resolve merge conflicts properly before pushing.
-✅ No plagiarism or direct copy-pasting of code from the internet.
+✅ Commit frequently and use meaningful commit messages.  
+✅ Keep your code organized inside your team folder.  
+✅ Do not modify files outside your team folder.  
+✅ Follow the deadline for PR submissions every day.  
+✅ Resolve merge conflicts properly before pushing.  
+✅ No plagiarism or direct copy-pasting of code from the internet.  
+
 
 ---
 # Anti-Piracy License
