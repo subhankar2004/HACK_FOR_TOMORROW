@@ -15,7 +15,7 @@ const Navbar = () => {
 			</div>
 			<nav className={`nav-links ${isOpen ? "active" : ""}`}>
 				<a href='/'>Home</a>
-				<a href='/about'>Dance-Compare</a>
+				<a href='/dance-compare'>Dance-Compare</a>
 				<a href='/services'>Feedback</a>
 				<a
 					href='/login'
