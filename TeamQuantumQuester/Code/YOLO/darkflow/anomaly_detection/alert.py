@@ -1,10 +1,10 @@
 from twilio.rest import Client
 
 # Twilio API Credentials
-ACCOUNT_SID = "a1"
-AUTH_TOKEN = "b"
-TWILIO_PHONE = ""
-POLICE_PHONE = ""
+ACCOUNT_SID = "ACe06594b00f64e155206a5491eda7f5a1"
+AUTH_TOKEN = "0bfab324136c9266ce270ad60df04991"
+TWILIO_PHONE = "+15866493437"
+POLICE_PHONE = "+916376122867"
 
 def send_alert(anomalies_detected):
     client = Client(ACCOUNT_SID, AUTH_TOKEN)
