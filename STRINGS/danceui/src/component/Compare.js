@@ -89,7 +89,6 @@ function Compare() {
 			<header className='header'>
 				<h1>Dance Comparison Platform</h1>
 			</header>
-
 			<main className='content'>
 				<div className='video-section'>
 					{/* Reference Video */}
