@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Women's Only Transport System - ELVYRA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #d0d2fe;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 500px;
+            text-align: center;
+        }
+        h1 {
+            color: #36386d;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .bus-list {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .bus-column {
+            width: 48%;
+        }
+        .bus-column h3 {
+            color: #36386d;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .bus-item {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: background 0.3s ease-in-out;
+        }
+        .bus-item:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+        .bus-item input {
+            margin-right: 10px;
+        }
+        .driver {
+            position: relative;
+            color: #3a3d63;
+            font-weight: normal; /* Made it simple */
+            cursor: pointer;
+        }
+        .driver:hover::after {
+            content: attr(data-feedback);
+            position: absolute;
+            left: 50%;
+            top: -25px;
+            transform: translateX(-50%);
+            background: rgba(54, 56, 109, 0.9);
+            color: #fff;
+            padding: 5px 8px;
+            border-radius: 5px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .confirm-btn {
+            background: linear-gradient(135deg, #434485, #6b73ff);
+            color: white;
+            font-size: 16px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease-in-out;
+            display: block;
+            margin: 20px auto 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .confirm-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.4s ease-in-out;
+        }
+        .confirm-btn:hover::before {
+            left: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WOMEN'S ONLY TRANSPORT SYSTEM</h1>
+        <form action="{{ url_for('map_interface') }}" method="GET">
+            <div class="bus-list">
+                <div class="bus-column">
+                    <h3>Available Buses</h3>
+                    <div class="bus-item">
+                        <input type="radio" id="bus101749" name="bus" value="101749" required>
+                        <label for="bus101749">101749</label>
+                    </div>
+                    <div class="bus-item">
+                        <input type="radio" id="bus101467" name="bus" value="101467">
+                        <label for="bus101467">101467</label>
+                    </div>
+                    <div class="bus-item">
+                        <input type="radio" id="bus101336" name="bus" value="101336">
+                        <label for="bus101336">101336</label>
+                    </div>
+                    <div class="bus-item">
+                        <input type="radio" id="bus101235" name="bus" value="101235">
+                        <label for="bus101235">101235</label>
+                    </div>
+                    <div class="bus-item">
+                        <input type="radio" id="bus101557" name="bus" value="101557">
+                        <label for="bus101557">101557</label>
+                    </div>
+                </div>
+                <div class="bus-column">
+                    <h3>Driver Assigned</h3>
+                    <div class="bus-item">
+                        <span class="driver" data-feedback="Good">Dinesh Rathore</span>
+                    </div>
+                    <div class="bus-item">
+                        <span class="driver" data-feedback="Not Bad">Harprit Singh</span>
+                    </div>
+                    <div class="bus-item">
+                        <span class="driver" data-feedback="Excellent">Subh Dash</span>
+                    </div>
+                    <div class="bus-item">
+                        <span class="driver" data-feedback="Outstanding">Mukundar Tiwari</span>
+                    </div>
+                    <div class="bus-item">
+                        <span class="driver" data-feedback="Bad">Ratikanta Behera</span>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="confirm-btn">CONFIRM</button>
+        </form>
+    </div>
+</body>
+</html>
