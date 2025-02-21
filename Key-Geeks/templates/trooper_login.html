@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trooper Login - ELVYRA</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #d0d2fe;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 50px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 460px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+        h1 {
+            color: #434485;
+            font-size: 21px;
+            margin-bottom: 30px;
+        }
+        label {
+            color: #434485;
+            font-size: 15px;
+            font-weight: 500;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.5);
+            color: #333;
+            transition: 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        input:focus {
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
+        }
+        button {
+            background: linear-gradient(135deg, #434485, #6b73ff);
+            color: #ffffff;
+            font-size: 17px;
+            padding: 14px 35px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 30px;
+            font-weight: 500;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+        }
+        button:hover {
+            transform: scale(1.06) translateY(-3px);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+        }
+        button::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: left 0.5s ease-in-out;
+        }
+        button:hover::after {
+            left: 100%;
+        }
+        .error {
+            color: red;
+            margin-top: 15px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Trooper Login</h1>
+        <form id="loginForm">
+            <label for="trooper_id">User ID:</label>
+            <input type="text" id="trooper_id" name="trooper_id" required>
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit">Login</button>
+            <p class="error" id="errorMessage"></p>
+        </form>
+    </div>
+    
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            const validTroopers = {
+                "TPR7791": "Trpr91",
+                "TPR7792": "Trpr92",
+                "TPR7793": "Trpr93",
+                "TPR7794": "Trpr94",
+                "TPR7795": "Trpr95"
+            };
+            
+            const userId = document.getElementById("trooper_id").value;
+            const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("errorMessage");
+            
+            if (validTroopers[userId] && validTroopers[userId] === password) {
+                window.location.href = "/trooper_dashboard";
+            } else {
+                errorMessage.textContent = "Invalid Trooper ID or Password. Try again!";
+            }
+        });
+    </script>
+</body>
+</html>

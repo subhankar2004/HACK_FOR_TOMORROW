@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - ELVYRA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #d0d2fe;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 450px;
+        }
+        h2 {
+            color: #36386d;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        label {
+            color: #36386d;
+            font-size: 16px;
+            font-weight: 500;
+            width: 40%;
+        }
+        input {
+            width: 55%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.5);
+            color: #333;
+            font-size: 14px;
+        }
+        .submit-btn, .continue-btn {
+            background: linear-gradient(135deg, #434485, #6b73ff);
+            color: #ffffff;
+            font-size: 17px;
+            padding: 12px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 500;
+            position: relative;
+            backdrop-filter: blur(12px);
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+        .submit-btn::after, .continue-btn::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: left 0.5s ease-in-out;
+        }
+        .submit-btn:hover::after, .continue-btn:hover::after {
+            left: 100%;
+        }
+        .risk-result {
+            margin-top: 15px;
+            text-align: left;
+            font-size: 16px;
+            color: #36386d;
+            font-weight: normal;
+            line-height: 1.8; /* Added spacing between Risk Percentage, Crime Rate, and Distance */
+        }
+        .high-risk {
+            color: red;
+            font-weight: bold;
+        }
+        .continue-btn {
+            display: none;
+            margin-top: 15px;
+        }
+    </style>
+    <script>
+        function calculateRisk(event) {
+            event.preventDefault();
+            
+            let locationInput = document.getElementById("location").value.trim().toLowerCase();
+            let riskData = {
+                "udit nagar": { risk: 7, crime: 3, distance: "12Km" },
+                "chhend colony": { risk: 9, crime: 5, distance: "10Km" },
+                "panposh": { risk: 29, crime: 17, distance: "9Km" },
+                "daily market": { risk: 89, crime: 77, distance: "7Km" },
+                "railway station": { risk: 29, crime: 11, distance: "4Km" },
+                "hanuman vatika": { risk: 3, crime: 1, distance: "10Km" },
+                "civil township": { risk: 79, crime: 66, distance: "5Km" }
+            };
+            
+            let resultDiv = document.getElementById("result");
+            let continueBtn = document.getElementById("continue-btn");
+
+            if (riskData[locationInput]) {
+                let risk = riskData[locationInput].risk;
+                let crime = riskData[locationInput].crime;
+                let distance = riskData[locationInput].distance;
+                resultDiv.innerHTML = `
+                    Risk Percentage: ${risk}%<br><br>
+                    Crime Rate: ${crime}%<br><br>
+                    Distance: ${distance}
+                `;
+                
+                if (risk < 30) {
+                    continueBtn.style.display = "block";
+                    resultDiv.classList.remove("high-risk");
+                } else {
+                    resultDiv.innerHTML += `<br><br><span class='high-risk'>High Crime Rate Area, Avoid To Move!</span>`;
+                    continueBtn.style.display = "none";
+                }
+            } else {
+                resultDiv.innerHTML = "<span class='high-risk'>Invalid Location</span>";
+                continueBtn.style.display = "none";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("continue-btn").addEventListener("click", function() {
+                window.location.href = "{{ url_for('transport_system') }}";
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>RISKQUANT</h2>
+        <form id="locationForm" onsubmit="calculateRisk(event)">
+            <div class="form-group">
+                <label for="location">Select Location:</label>
+                <input type="text" id="location" name="location" required>
+            </div>
+            <div class="form-group">
+                <label for="date">Select Date:</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+            <div class="form-group">
+                <label for="time">Select Time:</label>
+                <input type="time" id="time" name="time" required>
+            </div>
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+        <div id="result" class="risk-result"></div>
+        <button id="continue-btn" class="continue-btn">Continue</button>
+    </div>
+</body>
+</html>
