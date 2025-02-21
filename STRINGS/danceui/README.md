@@ -1,70 +1,77 @@
-# Getting Started with Create React App
+# DANCE-ZERO: AI-POWERED DANCE ACCURACY AND STEP CORRECTION APP
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Introduction
 
-## Available Scripts
+Dance-Zero is an AI-powered application designed to improve dance learning efficiency by analyzing body movements, detecting dance steps, and providing real-time corrections. The system utilizes advanced pose estimation techniques and machine learning algorithms to guide users towards accurate movements.
 
-In the project directory, you can run:
+## Tech Stack
 
-### `npm start`
+### Backend (Flask-based API)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Flask - Lightweight web framework for API development
+- OpenCV - Video processing and real-time body detection
+- MediaPipe - Pose estimation and landmark extraction
+- Matplotlib - Visualization of dance movements
+- SciPy - Euclidean distance calculations for movement accuracy
+- FastData - Performance optimization for real-time processing
+- NumPy - Numerical computation and matrix operations
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Frontend (React-based UI)
 
-### `npm test`
+- React.js (CRA) - Component-based UI architecture
+- JavaScript - Frontend logic and API integration
+- CSS - Styling and responsive design
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## System Architecture
 
-### `npm run build`
+1. Admin Video Upload:
+   - Admin uploads dance tutorial videos (Basic to Advanced).
+   - Videos are processed and key movement landmarks are extracted.
+2. User Pose Detection & Comparison:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+   - User upload video; real-time video is processed using OpenCV.
+   - MediaPipe extracts body landmarks (joints, angles, facial points).
+   - Pose landmarks from the user’s video are compared with reference dance movements using Euclidean distance and angle betwwen different body parts (Eg. - elbow, shoulder, knee, wrist, hip-join, ankle).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. Performance Evaluation:
+   - Visual analytics using Matplotlib to compare user’s performance against the reference dance.
+   - Generates insights on accuracy, posture deviations, and improvement areas.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Key Features
 
-### `npm run eject`
+- Pose Estimation: Real-time body tracking via MediaPipe/OpenCV.
+- Step Correction: AI-based feedback with visual guidance.
+- Accuracy Rating: Quantitative movement analysis using machine learning models.
+- User-friendly UI: React.js frontend for an interactive experience.
+- Scalability: Optimized with FastData for smooth real-time processing.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Installation & Setup
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Backend Setup
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+mkdir backend
+pip install flask opencv-python mediapipe matplotlib scipy fastdata numpy
+python app.py  # Start Flask server
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Frontend Setup
 
-## Learn More
+```bash
+npx create-react-app danceui
+cd danceui
+npm install
+npm start  # Start React frontend
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## USE GENERATIVE AI API
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Future Scope
 
-### Code Splitting
+- AI-driven movement analysis reports for professional training.
+- Expansion to yoga, martial arts, and physiotherapy.
+- Cloud-based analytics for personalized learning.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Conclusion
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Dance-Zero leverages AI and computer vision to democratize dance learning by providing real-time feedback and correction. This innovative approach enhances accessibility to high-quality dance training, revolutionizing self-paced learning experiences.
