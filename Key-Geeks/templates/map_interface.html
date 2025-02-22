@@ -6,139 +6,52 @@
     <title>Women's Only Transport System - ELVYRA</title>
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            background: #d0d2fe;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
-        }
-        .background-container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 50px;
-            border-radius: 25px;
-            backdrop-filter: blur(15px);
-            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.3);
-            width: 80%;
-            max-width: 900px;
-            position: relative;
-            text-align: center;
             overflow: hidden;
+            background-color: #f0f0f0; /* Fallback background color */
         }
-        h1 {
-            color: #36386d;
-            font-size: 28px;
-            margin-bottom: 30px;
+
+        img {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            opacity: 0; /* Initially hidden */
+            transition: opacity 1s ease-in-out; /* Fade-in animation */
         }
-        .road {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(180deg, #b0a8f0, #7a74c6);
-            border-radius: 10px;
-            position: relative;
-            margin: 20px 0;
+
+        /* Optional: Add a loading indicator */
+        #loading-indicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            color: #555;
+            z-index: 10; /* Ensure it's on top */
         }
-        .girl {
-            width: 50px;
-            position: absolute;
-            bottom: 20px;
-            left: -50px;
-            transition: transform 3s ease-in-out;
-        }
-        .bus {
-            width: 80px;
-            position: absolute;
-            bottom: 30px;
-            right: -100px;
-            transition: transform 3s ease-in-out;
-        }
-        .path {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: none;
-            z-index: 0;
-        }
-        .path-line {
-            stroke: black;
-            stroke-dasharray: 5, 5;
-            stroke-width: 2;
-        }
-        .dot {
-            fill: black;
-            width: 10px;
-            height: 10px;
-            position: absolute;
-        }
-        .start-dot {
-            left: 0;
-            bottom: 0;
-        }
-        .end-dot {
-            right: 0;
-            top: 0;
-        }
-        .circle {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 20px;
-            height: 20px;
-            background-color: #ff6347;
-            border-radius: 50%;
-            transition: transform 3s ease-in-out;
-        }
-        .start-btn {
-            background: linear-gradient(135deg, #434485, #6b73ff);
-            color: white;
-            font-size: 16px;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease-in-out;
-            display: inline-block;
-            margin-top: 20px;
-        }
-        .start-btn:hover {
-            background: linear-gradient(135deg, #6b73ff, #434485);
+
+        /* Hide the loading indicator once the image loads */
+        img.loaded + #loading-indicator {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div class="background-container">
-        <h1>WOMEN'S ONLY TRANSPORT SYSTEM</h1>
-        <div class="road">
-            <svg class="path" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <path class="path-line" d="M 0 100 Q 50 50, 100 0" />
-            </svg>
-            <div class="circle" id="circle"></div>
-            <div class="dot start-dot"></div>
-            <div class="dot end-dot"></div>
-        </div>
-        <button class="start-btn" onclick="startJourney()">Start Journey</button>
-    </div>
-    
+    <img id="elvyra-map" src="https://media-hosting.imagekit.io//bbb09181792f4d47/Elvyra%20map.png?Expires=1834800430&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=tWe9idMtRXErZRR8U8VeITKCr7mAOJNTzuWMC03A8u0v73W4VZGlL0MgIYYA1jvCqzg5qSMRDWO5w0FcumcTM4fDA~PEFtkIfp2F1lI64V9-hgUDxT8ER~6Lrc25eTOZm09t8CIt-Qs~P4ZmxQ1VFQvTArXc8Twahf84I3NdIcVoe-SyrsGvGAnYlHWrVLi-eFCQXz03iOtYa4kDyNp-7DiVGvBfDbq5HaoXjbyHN5Nu1lejQ8bZOwr3u5nZwII6rCrQ6ayf4dzCHYQ7ZwWDfjyn5I0Gxlzfum-C6zix5xjaJRMupJFLGRLJO4hZYzULheSg6HO~~TF4vyw~qRmWUg__" alt="Elvyra Map">
+    <div id="loading-indicator">Loading...</div>
+
     <script>
-        function startJourney() {
-            const circle = document.getElementById('circle');
-            const path = document.querySelector('.path-line');
-            const length = path.getTotalLength();
+        const img = document.getElementById('elvyra-map');
 
-            // Make sure the circle is on the starting point
-            circle.style.transform = 'translate(0, 100%)';
+        img.onload = function() {
+            img.classList.add('loaded'); // Add a class to signal loading completion
+            img.style.opacity = 1; // Fade in the image
+        };
 
-            // Animate the circle along the path
-            setTimeout(() => {
-                circle.style.transition = 'transform 3s ease-in-out';
-                circle.style.transform = `translate(${length}, -100%)`;
-            }, 100);
-        }
+        img.onerror = function() {
+            console.error('Failed to load image.');
+            document.getElementById('loading-indicator').textContent = 'Failed to load image.'; //update loading text
+        };
     </script>
 </body>
 </html>

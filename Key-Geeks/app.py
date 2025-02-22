@@ -1,9 +1,30 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 
 app = Flask(__name__)
 
 # Dummy user credentials (Replace with database logic later)
 users = {"user1": "password123", "trooper1": "securepass"}
+
+# Chatbot Responses (Moved to Python for easier management)
+chatbot_responses = {
+    "i want to go to a particular place daily market at (\\d+:\\d+ (am|pm)). is it safe?": "The crime rate in the area is 58%, which falls under the orange category. This means you can move, but caution is advised.",
+    "suggest the safest route to reach daily market": "The safest route is: Sarana → Plant Site → Ispat → Sail Chowk → Railway Station Road → Daily Market.",
+    "is the area safe to walk at night": "Yes, the area is generally safe to walk at night.",
+    "does elvyra provide a transport system": "Yes, Elvyra provides a transport system.",
+    "what is the safest time to travel to my destination": "The safest time to travel to your destination is 1:17 PM.",
+    "hii": "Hello! how can I assist you today?",
+    "Hi": "Hey how can I assist you today?",
+    "hey": "Hello! how can I assist you today?",
+    "hello": "Hello! how can I assist you today?",
+    "Shree Radhe Radhe": "Shree Radhe Radhe! How Can I Assist You Today?",
+    "Hare Krishna": "Shree Radhe Krishna",
+    "what should i do if i feel unsafe": """If you feel unsafe:
+                            Contact your family members.
+                            Trigger SOS.
+                            Contact local police administration or reach the nearest police station.
+                            Call central police at 100.""",
+    "where is the nearest police station": "The nearest police station is Udit Nagar Police Station (via Mahtab Road)."
+}
 
 @app.route("/")
 def loading():
@@ -65,6 +86,18 @@ def trooper_login():
 @app.route("/trooper_dashboard")
 def trooper_dashboard():
     return render_template("trooper_dashboard.html")
+
+@app.route("/get_chatbot_response")
+def get_chatbot_response():
+    user_message = request.args.get("msg", "").lower()
+    response = "I am sorry, I don't have the answer to that question."  # Default
+    for question, answer in chatbot_responses.items():
+        import re
+        regex = re.compile(question, re.IGNORECASE) #Case-insensitive
+        if regex.search(user_message):
+            response = answer
+            break
+    return jsonify(response=response) # Return the response as JSON
 
 if __name__ == "__main__":
     app.run(debug=True)

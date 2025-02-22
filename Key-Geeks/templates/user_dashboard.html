@@ -1,45 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard - ELVYRA</title>
+    <title>User Dashboard - RISKQUANT</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+        /* CSS Variables for consistent styling */
+        :root {
+            --primary-color: #36386d;
+            --secondary-color: #6b73ff;
+            --background-color: #d0d2fe;
+            --white-transparent: rgba(255, 255, 255, 0.1);
+            --font-family: 'Poppins', sans-serif;
+            --usp-button-size: 50px;
+            --icon-size: 60px;
+        }
+
+        /* General body and font styles */
         body {
-            font-family: 'Poppins', sans-serif;
-            background: #d0d2fe;
+            font-family: var(--font-family);
+            background: var(--background-color);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
+            /* Prevent scrolling on background clicks */
         }
+
+        /* Container styles with blur effect and shadow */
         .container {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--white-transparent);
             padding: 40px;
             border-radius: 15px;
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             width: 450px;
+            position: relative;
         }
+
+        /* Heading styles */
         h2 {
-            color: #36386d;
+            color: var(--primary-color);
             text-align: center;
             margin-bottom: 20px;
         }
+
+        /* Form group layout */
         .form-group {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
         }
+
+        /* Label styles */
         label {
-            color: #36386d;
+            color: var(--primary-color);
             font-size: 16px;
             font-weight: 500;
             width: 40%;
         }
+
+        /* Input field styles */
         input {
             width: 55%;
             padding: 10px;
@@ -50,8 +79,12 @@
             color: #333;
             font-size: 14px;
         }
-        .submit-btn, .continue-btn {
-            background: linear-gradient(135deg, #434485, #6b73ff);
+
+        /* Button styles */
+        .submit-btn,
+        .continue-btn,
+        .logout-btn {
+            background: linear-gradient(135deg, #434485, var(--secondary-color));
             color: #ffffff;
             font-size: 17px;
             padding: 12px;
@@ -65,7 +98,11 @@
             overflow: hidden;
             transition: all 0.3s ease-in-out;
         }
-        .submit-btn::after, .continue-btn::after {
+
+        /* Button hover effect overlay */
+        .submit-btn::after,
+        .continue-btn::after,
+        .logout-btn::after {
             content: "";
             position: absolute;
             top: 0;
@@ -74,77 +111,420 @@
             height: 100%;
             background: rgba(255, 255, 255, 0.3);
             transition: left 0.5s ease-in-out;
+            border-radius: 25px;
         }
-        .submit-btn:hover::after, .continue-btn:hover::after {
+
+        .submit-btn:hover::after,
+        .continue-btn:hover::after,
+        .logout-btn:hover::after {
             left: 100%;
         }
+
+        /* Result display styles */
         .risk-result {
             margin-top: 15px;
             text-align: left;
             font-size: 16px;
-            color: #36386d;
+            color: var(--primary-color);
             font-weight: normal;
-            line-height: 1.8; /* Added spacing between Risk Percentage, Crime Rate, and Distance */
+            line-height: 1.8;
         }
+
+        /* High-risk alert style */
         .high-risk {
             color: red;
             font-weight: bold;
         }
+
+        /* Continue button specific styles */
         .continue-btn {
             display: none;
             margin-top: 15px;
         }
-    </style>
-    <script>
-        function calculateRisk(event) {
-            event.preventDefault();
-            
-            let locationInput = document.getElementById("location").value.trim().toLowerCase();
-            let riskData = {
-                "udit nagar": { risk: 7, crime: 3, distance: "12Km" },
-                "chhend colony": { risk: 9, crime: 5, distance: "10Km" },
-                "panposh": { risk: 29, crime: 17, distance: "9Km" },
-                "daily market": { risk: 89, crime: 77, distance: "7Km" },
-                "railway station": { risk: 29, crime: 11, distance: "4Km" },
-                "hanuman vatika": { risk: 3, crime: 1, distance: "10Km" },
-                "civil township": { risk: 79, crime: 66, distance: "5Km" }
-            };
-            
-            let resultDiv = document.getElementById("result");
-            let continueBtn = document.getElementById("continue-btn");
 
-            if (riskData[locationInput]) {
-                let risk = riskData[locationInput].risk;
-                let crime = riskData[locationInput].crime;
-                let distance = riskData[locationInput].distance;
-                resultDiv.innerHTML = `
-                    Risk Percentage: ${risk}%<br><br>
-                    Crime Rate: ${crime}%<br><br>
-                    Distance: ${distance}
-                `;
-                
-                if (risk < 30) {
-                    continueBtn.style.display = "block";
-                    resultDiv.classList.remove("high-risk");
-                } else {
-                    resultDiv.innerHTML += `<br><br><span class='high-risk'>High Crime Rate Area, Avoid To Move!</span>`;
-                    continueBtn.style.display = "none";
-                }
-            } else {
-                resultDiv.innerHTML = "<span class='high-risk'>Invalid Location</span>";
-                continueBtn.style.display = "none";
+        /* USP Button Styles */
+        /* Remove the original USP Button styling */
+        #usp-button {
+            display: none;
+        }
+
+        /* USP Container Styles */
+        #usp-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white-transparent);
+            /* Match the container background */
+            backdrop-filter: blur(10px);
+            /* Match the container blur */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            /* Match the container shadow */
+            display: none;
+            justify-content: flex-start;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        #usp-container.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* USP Content Wrapper */
+        #usp-content {
+            background: var(--white-transparent);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 30%;
+            /* Adjusted width to fit 9:16 aspect ratio */
+            max-width: 300px;
+            /* Limits the maximum width */
+            text-align: center;
+            height: 100%;
+            /* Full height of the screen */
+            overflow-y: auto;
+        }
+
+        /* Ensure the height maintains the 9:16 aspect ratio */
+        @media (min-aspect-ratio: 9/16) {
+            #usp-content {
+                height: auto;
+                max-height: 80vh;
+                /* Adjust as needed */
+                width: calc(80vh * 9 / 16);
+                /* Calculate width based on height and aspect ratio */
+                max-width: 90%;
+                overflow-y: auto;
+                /* Add scroll for content that exceeds the max height */
             }
         }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById("continue-btn").addEventListener("click", function() {
-                window.location.href = "{{ url_for('transport_system') }}";
-            });
-        });
-    </script>
+        /* USP Grid Layout */
+        #usp-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        /* USP Item Styles */
+        .usp-item {
+            background: linear-gradient(135deg, #434485, var(--secondary-color));
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .usp-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .usp-item.expanded {
+            grid-column: 1 / -1;
+            background: var(--white-transparent);
+            color: var(--primary-color);
+            backdrop-filter: blur(10px);
+            text-align: left;
+            padding: 20px;
+        }
+
+        .usp-item.expanded:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Close Button Style */
+        #usp-close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            color: var(--primary-color);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        #usp-close-button:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Chatbot Styles */
+        .bottom-right-icons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .bottom-right-icons>div {
+            width: var(--icon-size);
+            height: var(--icon-size);
+            border-radius: 50%;
+            background: linear-gradient(135deg, #434485, var(--secondary-color));
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .bottom-right-icons>div:hover {
+            transform: scale(1.1);
+        }
+
+        #chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            /* Changed from 90px to 20px as the icons are in a flex container now*/
+            width: 350px;
+            height: 400px;
+            /* Updated to match the container's style */
+            background: var(--white-transparent);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            /*End*/
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            padding: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out, transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            /* Bouncy animation */
+            transform: scale(0.1);
+            /* Initially very small */
+            transform-origin: bottom right;
+        }
+
+        #chatbot-container.active {
+            display: flex;
+            opacity: 1;
+            transform: scale(1);
+            /* Scale to normal size */
+        }
+
+        #chat-header {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Style for the New Chat button */
+        #new-chat-button {
+            background: linear-gradient(135deg, #434485, var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden;
+            font-size: 14px;
+            /* Adjust font size as needed */
+            margin-left: 10px;
+            /* Add spacing between "SHEild" text and button */
+        }
+
+        #new-chat-button::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: left 0.5s ease-in-out;
+            border-radius: 25px;
+        }
+
+        #new-chat-button:hover::after {
+            left: 100%;
+        }
+
+        #chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-bottom: 10px;
+        }
+
+        #chat-messages>div {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            word-break: break-word;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease-out;
+            max-width: 70%;
+        }
+
+        #chat-messages>div.user-message {
+            text-align: right;
+            background-color: #E6E6FA;
+            color: #333;
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        #chat-messages>div.bot-message {
+            text-align: left;
+            background-color: #F8F8FF;
+            color: #333;
+            margin-right: auto;
+            margin-left: 0;
+        }
+
+        #chat-messages>div.code-block {
+            background-color: #f0f0f5;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        #chat-messages>div.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #user-input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 5px;
+        }
+
+        #send-button {
+            background: linear-gradient(135deg, #434485, var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #send-button::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: left 0.5s ease-in-out;
+            border-radius: 25px;
+        }
+
+        #send-button:hover::after {
+            left: 100%;
+        }
+
+        /* Responsive Design Adjustments */
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            #usp-content {
+                width: 95%;
+                max-width: none;
+            }
+
+            #usp-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 10px;
+            }
+
+            .usp-item {
+                padding: 10px;
+            }
+
+            #chatbot-container {
+                width: 90%;
+                max-width: 300px;
+                right: 5%;
+            }
+        }
+    </style>
 </head>
+
 <body>
+
+    <!-- USP Container (Hidden by Default) -->
+    <div id="usp-container">
+        <div id="usp-content">
+            <button id="usp-close-button">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2>Welcome! to Rourkela</h2>
+            <div id="usp-grid">
+                <div class="usp-item"
+                    data-info="Udit Nagar is a well-populated area; new visitors should stay alert in crowded places and avoid isolated streets at night. For assistance, contact Uditnagar Police Station at 0661-2501851 or 9438916644.">
+                    Udit Nagar
+                </div>
+                <div class="usp-item"
+                    data-info="Chhend Colony is a residential and commercial hub; visitors should stay cautious in less crowded lanes, especially after dark. For assistance, contact Chhend Police Station at 0661-2480315.">
+                    Chhend Colony
+                </div>
+                <div class="usp-item"
+                    data-info="Panposh is a busy locality; visitors should be cautious in market areas and avoid secluded spots at night. For assistance, contact Panposh Police Station at 0661-2646411.">
+                    Panposh
+                </div>
+                <div class="usp-item"
+                    data-info="Daily Market in Rourkela is often crowded; visitors, especially women, should stay alert against pickpockets and avoid late-night visits alone. For assistance, contact Plant Site Police Station at 0661-2642077.">
+                    Daily Market
+                </div>
+                <div class="usp-item"
+                    data-info="Rourkela Railway Station is a key transit point; visitors should stay cautious of strangers and avoid isolated areas at night. For assistance, contact Rourkela GRP Police at 9438916417.">
+                    Railway Station
+                </div>
+                <div class="usp-item"
+                    data-info="Hanuman Vatika is a well-maintained and safe place for visitors, but it’s advisable to stay alert and avoid late hours alone. For assistance, contact Uditnagar Police Station at 0661-2501851 or 9438916644.">
+                    Hanuman Vatika
+                </div>
+                <div class="usp-item"
+                    data-info="Civil Township is a peaceful residential area, but visitors should remain cautious in isolated streets at night. For assistance, contact Chhend Police Station at 0661-2480315.">
+                    Civil Township
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
+        <button class="logout-btn"
+            style="position: absolute; top: 10px; right: 10px; width: auto; padding: 8px 15px;">Logout</button>
         <h2>RISKQUANT</h2>
         <form id="locationForm" onsubmit="calculateRisk(event)">
             <div class="form-group">
@@ -164,5 +544,260 @@
         <div id="result" class="risk-result"></div>
         <button id="continue-btn" class="continue-btn">Continue</button>
     </div>
+
+    <!-- Chatbot Icon -->
+    <div class="bottom-right-icons">
+        <div id="star-icon">
+            <i class="fas fa-star" style="font-size: 24px;"></i>
+        </div>
+        <div id="chatbot-icon">
+            <i class="fas fa-comment-dots" style="font-size: 24px;"></i>
+        </div>
+    </div>
+
+    <!-- Chatbot Container -->
+    <div id="chatbot-container">
+        <div id="chat-header">
+            SHEild
+            <button id="new-chat-button">New Chat</button>
+        </div>
+        <div id="chat-messages">
+            <!-- Chat messages will be added here -->
+        </div>
+        <div style="display: flex;">
+            <input type="text" id="user-input" placeholder="Type your question...">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <script>
+        function calculateRisk(event) {
+            event.preventDefault();
+
+            let locationInput = document.getElementById("location").value.trim().toLowerCase();
+            let riskData = {
+                "udit nagar": {
+                    risk: 7,
+                    crime: 3,
+                    distance: "12Km"
+                },
+                "chhend colony": {
+                    risk: 9,
+                    crime: 5,
+                    distance: "10Km"
+                },
+                "panposh": {
+                    risk: 29,
+                    crime: 17,
+                    distance: "9Km"
+                },
+                "daily market": {
+                    risk: 89,
+                    crime: 77,
+                    distance: "7Km"
+                },
+                "railway station": {
+                    risk: 29,
+                    crime: 11,
+                    distance: "4Km"
+                },
+                "hanuman vatika": {
+                    risk: 3,
+                    crime: 1,
+                    distance: "10Km"
+                },
+                "civil township": {
+                    risk: 79,
+                    crime: 66,
+                    distance: "5Km"
+                }
+            };
+
+            let resultDiv = document.getElementById("result");
+            let continueBtn = document.getElementById('continue-btn');
+
+            if (riskData[locationInput]) {
+                let risk = riskData[locationInput].risk;
+                let crime = riskData[locationInput].crime;
+                let distance = riskData[locationInput].distance;
+                resultDiv.innerHTML = `Risk Percentage: ${risk}%<br><br>Crime Rate: ${crime}%<br><br>Distance: ${distance}`;
+
+                if (risk < 30) {
+                    continueBtn.style.display = "block";
+                    resultDiv.classList.remove("high-risk");
+                } else {
+                    resultDiv.innerHTML += "<br><br><span class='high-risk'>High Crime Rate Area, Avoid To Move!</span>";
+                    continueBtn.style.display = "none";
+                }
+            } else {
+                resultDiv.innerHTML = "<span class='high-risk'>Invalid Location</span>";
+                continueBtn.style.display = "none";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById('continue-btn').addEventListener("click", function() {
+                window.location.href = "{{ url_for('transport_system') }}";
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatbotIcon = document.getElementById('chatbot-icon');
+            const chatbotContainer = document.getElementById('chatbot-container');
+            const chatMessages = document.getElementById('chat-messages');
+            const userInput = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-button');
+            const starIcon = document.getElementById('star-icon');
+            const uspContainer = document.getElementById('usp-container');
+            //const uspButton = document.getElementById('usp-button');  // Remove uspButton
+
+            starIcon.addEventListener('click', function(event) {
+                event.stopPropagation();
+                uspContainer.classList.toggle('active');
+            });
+
+            chatbotIcon.addEventListener('click', function() {
+                chatbotContainer.classList.toggle('active');
+            });
+
+            // Close Chatbot/USP on outside click
+            document.addEventListener('click', function(event) {
+                // Check if the click is outside the chatbot container AND chatbot icon AND the chatbot is active
+                if (!chatbotContainer.contains(event.target) && !chatbotIcon.contains(event.target) &&
+                    chatbotContainer.classList.contains('active')) {
+                    chatbotContainer.classList.remove('active');
+                }
+
+                // Check if the click is outside the USP container AND star icon AND the USP is active
+                if (!uspContainer.contains(event.target) && !starIcon.contains(event.target) &&
+                    uspContainer.classList.contains('active')) {
+                    uspContainer.classList.remove('active');
+                }
+            });
+
+            sendButton.addEventListener('click', sendMessage);
+
+            userInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    sendMessage();
+                    event.preventDefault();
+                }
+            });
+
+            // Clear chat messages
+            newChatButton.addEventListener('click', function() {
+                // Remove all child elements of chatMessages
+                while (chatMessages.firstChild) {
+                    chatMessages.removeChild(chatMessages.firstChild);
+                }
+            });
+
+            function sendMessage() {
+                const message = userInput.value.trim();
+                if (message) {
+                    addUserMessage(message);
+                    //Make AJAX request to Flask backend
+                    fetch(`/get_chatbot_response?msg=${encodeURIComponent(message)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            addBotMessage(data.response);
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
+                            addBotMessage("Sorry, I encountered an error.");
+                        });
+                    userInput.value = '';
+                }
+            }
+
+            function addUserMessage(message) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('user-message');
+                messageDiv.textContent = message;
+                chatMessages.appendChild(messageDiv);
+                animateMessage(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function addBotMessage(message) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('bot-message');
+                messageDiv.textContent = message;
+                chatMessages.appendChild(messageDiv);
+                animateMessage(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function addBotMessageCode(message) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('bot-message', 'code-block');
+                messageDiv.textContent = message;
+                chatMessages.appendChild(messageDiv);
+                animateMessage(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Function to delay adding the 'show' class for animation
+            function animateMessage(element) {
+                setTimeout(() => {
+                    element.classList.add('show');
+                }, 50); // Small delay to ensure the element is added to the DOM first
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uspContainer = document.getElementById('usp-container');
+            const uspItems = document.querySelectorAll('.usp-item');
+            const uspCloseButton = document.getElementById('usp-close-button');
+
+            uspCloseButton.addEventListener('click', function(event) {
+                event.stopPropagation(); // Prevent click from propagating to container
+                uspContainer.classList.remove('active');
+
+                // Reset any expanded items when closing the USP container
+                uspItems.forEach(item => {
+                    item.classList.remove('expanded');
+                    item.textContent = item.dataset.originalText; // Restore original text
+                });
+            });
+
+            uspContainer.addEventListener('click', function(event) {
+                if (event.target === this) { // Only close if the backdrop is clicked
+                    uspContainer.classList.remove('active');
+
+                    // Reset any expanded items when closing the USP container
+                    uspItems.forEach(item => {
+                        item.classList.remove('expanded');
+                        item.textContent = item.dataset.originalText; // Restore original text
+                    });
+                }
+            });
+
+            uspItems.forEach(item => {
+                item.dataset.originalText = item.textContent; // Store original text
+                item.addEventListener('click', function() {
+                    // First, collapse any other expanded items
+                    uspItems.forEach(otherItem => {
+                        if (otherItem !== this && otherItem.classList.contains('expanded')) {
+                            otherItem.classList.remove('expanded');
+                            otherItem.textContent = otherItem.dataset.originalText; // Restore original text
+                        }
+                    });
+
+                    // Toggle the clicked item
+                    this.classList.toggle('expanded');
+
+                    if (this.classList.contains('expanded')) {
+                        this.textContent = this.dataset.info;
+                    } else {
+                        this.textContent = this.dataset.originalText; // Restore original text
+                    }
+                });
+            });
+        });
+    </script>
 </body>
+
 </html>
