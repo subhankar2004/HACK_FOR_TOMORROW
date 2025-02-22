@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Subscription Plans{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header bg-success text-white">
+    Subscription Plans
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Choose a Plan</h5>
+    <div class="row">
+      <!-- Plan 1 -->
+      <div class="col-md-4">
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header">
+            <h4 class="my-0 fw-normal">Basic</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">$5 <small class="text-muted">/ mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>Driver Score Access</li>
+              <li>Profile Management</li>
+            </ul>
+            <button type="button" class="w-100 btn btn-lg btn-outline-primary">Subscribe</button>
+          </div>
+        </div>
+      </div>
+      <!-- Plan 2 -->
+      <div class="col-md-4">
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header">
+            <h4 class="my-0 fw-normal">Premium</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">$15 <small class="text-muted">/ mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>Everything in Basic</li>
+              <li>Detailed Analytics</li>
+              <li>24/7 Support</li>
+            </ul>
+            <button type="button" class="w-100 btn btn-lg btn-primary">Subscribe</button>
+          </div>
+        </div>
+      </div>
+      <!-- Plan 3 -->
+      <div class="col-md-4">
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header">
+            <h4 class="my-0 fw-normal">Enterprise</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">$29 <small class="text-muted">/ mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>All Premium Features</li>
+              <li>Custom Analytics</li>
+              <li>Priority Support</li>
+            </ul>
+            <button type="button" class="w-100 btn btn-lg btn-primary">Subscribe</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
