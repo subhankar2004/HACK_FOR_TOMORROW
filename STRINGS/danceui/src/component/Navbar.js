@@ -14,8 +14,8 @@ const Navbar = () => {
 				<a href='/'>Dance Zero</a>
 			</div>
 			<nav className={`nav-links ${isOpen ? "active" : ""}`}>
-				<a href='/'>Home</a>
-				<a href='/dance-compare'>Dance-Compare</a>
+				<a href='/home'>Home</a>
+				<a href='/compare'>Dance-Compare</a>
 				<a href='/services'>Feedback</a>
 				<a
 					href='/login'

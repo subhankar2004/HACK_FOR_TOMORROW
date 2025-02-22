@@ -14,9 +14,9 @@ body {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	background: linear-gradient(45deg, #007bff, #00c6ff);
+	background-color: #c0860ad6;
 	padding: 15px 30px;
-	color: white;
+	color: rgb(206, 31, 31);
 	position: fixed;
 	width: 100%;
 	top: 0;
@@ -29,7 +29,6 @@ body {
 	text-decoration: none;
 	font-size: 24px;
 	font-weight: bold;
-	color: white;
 }
 
 /* Navbar Links */
@@ -40,7 +39,6 @@ body {
 
 .nav-links a {
 	text-decoration: none;
-	color: white;
 	font-size: 18px;
 	padding: 10px;
 	transition: 0.3s ease;

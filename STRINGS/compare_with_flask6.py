@@ -1,12 +1,14 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template, jsonify, send_file
 import cv2
 import numpy as np
 import mediapipe as mp
 import os
 import time
 from scipy.spatial.distance import cosine
-from fastdtw import fastdtw  # Changed import
-from scipy.spatial.distance import euclidean  # Required for fastdtw
+from fastdtw import fastdtw
+from scipy.spatial.distance import euclidean
+import matplotlib.pyplot as plt
+from io import BytesIO
 
 app = Flask(__name__)
 
@@ -14,7 +16,7 @@ app = Flask(__name__)
 mp_pose = mp.solutions.pose
 pose = mp_pose.Pose(
     static_image_mode=False,
-    model_complexity=2,  # Use the most accurate model
+    model_complexity=2,
     smooth_landmarks=True,
     min_detection_confidence=0.7,
     min_tracking_confidence=0.7
@@ -29,6 +31,14 @@ IMPORTANT_KEYPOINTS = [
     25, 26,  # knees
     27, 28   # ankles
 ]
+
+# Define body parts for more intuitive feedback
+BODY_PARTS = {
+    0: "Right Arm",
+    1: "Left Arm",
+    2: "Right Leg",
+    3: "Left Leg"
+}
 
 # Function to extract pose keypoints with normalized coordinates
 def extract_keypoints(frame):
@@ -133,9 +143,51 @@ def calculate_similarity(kp1, kp2):
     
     return final_similarity
 
+# NEW: Function to generate comparison graphs
+def generate_comparison_graphs(frame_similarities, angle_diffs_over_time):
+    plt.figure(figsize=(15, 10))
+    
+    # Plot 1: Overall similarity over time
+    plt.subplot(2, 1, 1)
+    plt.plot(frame_similarities, color='blue', linewidth=2)
+    plt.axhline(y=0.7, color='r', linestyle='--', alpha=0.7)  # Threshold line
+    plt.fill_between(range(len(frame_similarities)), frame_similarities, 0.7,
+                     where=[x < 0.7 for x in frame_similarities], color='red', alpha=0.3)
+    plt.title('Pose Similarity Over Time', fontsize=14)
+    plt.ylabel('Similarity Score', fontsize=12)
+    plt.ylim(0, 1)
+    plt.grid(True, alpha=0.3)
+    
+    # Plot 2: Angle differences by body part
+    plt.subplot(2, 1, 2)
+    
+    colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33F5']
+    
+    for i in range(4):  # Four joint angles
+        plt.plot(angle_diffs_over_time[:, i], 
+                 label=f'{BODY_PARTS[i]} Angle Difference', 
+                 color=colors[i], 
+                 linewidth=2)
+    
+    plt.title('Joint Angle Differences by Body Part', fontsize=14)
+    plt.xlabel('Frame Number', fontsize=12)
+    plt.ylabel('Angle Difference (radians)', fontsize=12)
+    plt.legend(loc='upper right')
+    plt.grid(True, alpha=0.3)
+    
+    plt.tight_layout()
+    
+    # Save plot to memory buffer
+    buf = BytesIO()
+    plt.savefig(buf, format='png', dpi=100)
+    buf.seek(0)
+    plt.close()
+    
+    return buf
+
 @app.route('/')
 def index():
-    return render_template('index4.html')
+    return render_template('index6.html')
 
 @app.route('/compare', methods=['POST'])
 def compare_videos():
@@ -148,10 +200,11 @@ def compare_videos():
     # Ensure uploads directory exists
     if not os.path.exists('uploads'):
         os.makedirs('uploads')
-
-    # Save videos temporarily
-    video1_path = os.path.join('uploads', video1.filename)
-    video2_path = os.path.join('uploads', video2.filename)
+    
+    # Generate unique filenames to avoid conflicts
+    timestamp = int(time.time())
+    video1_path = os.path.join('uploads', f"{timestamp}_1_{video1.filename}")
+    video2_path = os.path.join('uploads', f"{timestamp}_2_{video2.filename}")
     
     try:
         video1.save(video1_path)
@@ -214,30 +267,40 @@ def compare_videos():
         # Temporal comparison frame by frame
         frame_similarities = []
         detailed_feedback = []
+        angle_diffs_over_time = []  # Store angle differences for visualization
         
         for i in range(len(seq1)):
             # Get frame similarity
             similarity = calculate_similarity(seq1[i], seq2[i])
             frame_similarities.append(similarity)
             
-            # Add detailed feedback for significant deviations
-            if similarity < 0.7:
-                angles1 = calculate_angles(seq1[i])
-                angles2 = calculate_angles(seq2[i])
+            angles1 = calculate_angles(seq1[i])
+            angles2 = calculate_angles(seq2[i])
+            
+            # Store angle differences for visualization
+            if angles1 is not None and angles2 is not None:
+                angle_diffs = np.abs(angles1 - angles2)
+                angle_diffs_over_time.append(angle_diffs)
                 
-                if angles1 is not None and angles2 is not None:
-                    # Check which body part has the largest deviation
-                    angle_diffs = np.abs(angles1 - angles2)
+                # Add detailed feedback for significant deviations
+                if similarity < 0.7:
                     max_diff_idx = np.argmax(angle_diffs)
-                    
-                    if max_diff_idx == 0:
-                        detailed_feedback.append(f"Frame {i}: Check right arm position")
-                    elif max_diff_idx == 1:
-                        detailed_feedback.append(f"Frame {i}: Check left arm position")
-                    elif max_diff_idx == 2:
-                        detailed_feedback.append(f"Frame {i}: Check right leg position")
-                    elif max_diff_idx == 3:
-                        detailed_feedback.append(f"Frame {i}: Check left leg position")
+                    body_part = BODY_PARTS[max_diff_idx]
+                    detailed_feedback.append(f"Frame {i}: Check {body_part} position")
+            else:
+                # Add placeholder if angles couldn't be calculated
+                angle_diffs_over_time.append(np.zeros(4))
+        
+        # Convert to numpy array for easier manipulation
+        angle_diffs_over_time = np.array(angle_diffs_over_time)
+        
+        # Generate comparison graphs
+        graph_buffer = generate_comparison_graphs(frame_similarities, angle_diffs_over_time)
+        
+        # Save the graph to a temporary file
+        graph_path = os.path.join('uploads', f"comparison_graph_{timestamp}.png")
+        with open(graph_path, 'wb') as f:
+            f.write(graph_buffer.getbuffer())
         
         # Overall accuracy is the average similarity
         overall_accuracy = np.mean(frame_similarities) * 100
@@ -245,10 +308,17 @@ def compare_videos():
         # Find the timestamps with lowest similarity
         if len(frame_similarities) > 0:
             worst_frames = np.argsort(frame_similarities)[:3]
-            timestamps = [f"{int(i / fps1 // 60)}:{int(i / fps1 % 60)}" for i in worst_frames]
+            timestamps = [f"{int(i / fps1 // 60)}:{int(i / fps1 % 60):02d}" for i in worst_frames]
             improvement_areas = [f"Check posture at {timestamp}" for timestamp in timestamps]
         else:
             improvement_areas = ["Could not identify specific areas for improvement"]
+        
+        # Get body part with most consistent issues
+        if angle_diffs_over_time.size > 0:
+            avg_angle_diffs = np.mean(angle_diffs_over_time, axis=0)
+            worst_body_part_idx = np.argmax(avg_angle_diffs)
+            worst_body_part = BODY_PARTS[worst_body_part_idx]
+            improvement_areas.append(f"Focus on improving {worst_body_part} alignment")
         
         # Prepare detailed feedback
         detailed_feedback = detailed_feedback[:5]  # Limit to 5 most significant issues
@@ -256,7 +326,8 @@ def compare_videos():
         result = {
             "accuracy": f"{overall_accuracy:.2f}%",
             "improvement_areas": improvement_areas,
-            "detailed_feedback": detailed_feedback
+            "detailed_feedback": detailed_feedback,
+            "graph_url": f"/get_graph/{timestamp}"  # Endpoint to retrieve the graph
         }
 
     except Exception as e:
@@ -269,7 +340,7 @@ def compare_videos():
         if 'cap2' in locals() and cap2.isOpened():
             cap2.release()
 
-        # Remove temporary files if they exist
+        # Remove temporary video files if they exist
         try:
             if os.path.exists(video1_path):
                 os.remove(video1_path)
@@ -280,5 +351,27 @@ def compare_videos():
 
     return jsonify(result)
 
+# New endpoint to serve the generated graph
+@app.route('/get_graph/<timestamp>')
+def get_graph(timestamp):
+    graph_path = os.path.join('uploads', f"comparison_graph_{timestamp}.png")
+    if os.path.exists(graph_path):
+        return send_file(graph_path, mimetype='image/png')
+    else:
+        return "Graph not found", 404
+
+# Cleanup function to remove old files (can be called periodically)
+def cleanup_old_files():
+    current_time = time.time()
+    for filename in os.listdir('uploads'):
+        file_path = os.path.join('uploads', filename)
+        if os.path.isfile(file_path):
+            # Remove files older than 1 hour
+            if current_time - os.path.getmtime(file_path) > 3600:
+                os.remove(file_path)
+
 if __name__ == '__main__':
+    # Ensure uploads directory exists
+    if not os.path.exists('uploads'):
+        os.makedirs('uploads')
     app.run(debug=True)

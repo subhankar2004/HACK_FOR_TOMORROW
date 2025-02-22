@@ -3,3 +3,7 @@ opencv-python
 numpy
 mediapipe
 fastdtw
+tensorflow_hub
+tensorflow
+scipy
+dtaidistance

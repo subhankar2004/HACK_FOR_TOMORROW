@@ -158,6 +158,56 @@
             margin-bottom: 10px;
             border-radius: 0 4px 4px 0;
         }
+
+        /* New styles for graph section */
+        .graph-container {
+            margin-top: 30px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: white;
+        }
+
+        .graph-title {
+            background-color: #f5f5f5;
+            padding: 10px 15px;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .graph-content {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .graph-image {
+            max-width: 100%;
+            height: auto;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 4px;
+        }
+
+        .graph-legend {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            margin-right: 8px;
+            border-radius: 3px;
+        }
     </style>
 </head>
 
@@ -209,6 +259,41 @@
                 <span id="accuracyValue" style="font-size: 24px; font-weight: bold;"></span>
                 <div class="accuracy-bar">
                     <div class="fill" id="accuracyBar"></div>
+                </div>
+            </div>
+            
+            <!-- New Graph Section -->
+            <div class="graph-container">
+                <div class="graph-title">Frame-by-Frame Comparison Analysis</div>
+                <div class="graph-content">
+                    <img id="comparisonGraph" class="graph-image" alt="Frame comparison graph" />
+                    <div class="graph-legend">
+                        <h4>Graph Legend:</h4>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: blue;"></span>
+                            <span>Overall Similarity Score (higher is better)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: red;"></span>
+                            <span>Areas Below Threshold (need improvement)</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: #FF5733;"></span>
+                            <span>Right Arm Angle Difference</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: #33FF57;"></span>
+                            <span>Left Arm Angle Difference</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: #3357FF;"></span>
+                            <span>Right Leg Angle Difference</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: #FF33F5;"></span>
+                            <span>Left Leg Angle Difference</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -313,6 +398,16 @@
                 accuracyBar.style.backgroundColor = '#f39c12'; // Orange
             } else {
                 accuracyBar.style.backgroundColor = '#e74c3c'; // Red
+            }
+            
+            // Display the comparison graph if available
+            if (data.graph_url) {
+                const graphImg = document.getElementById('comparisonGraph');
+                // Add timestamp to prevent caching
+                graphImg.src = data.graph_url + '?t=' + new Date().getTime();
+                document.querySelector('.graph-container').style.display = 'block';
+            } else {
+                document.querySelector('.graph-container').style.display = 'none';
             }
             
             // Display areas for improvement

@@ -1,50 +1,32 @@
 import React from "react";
 import "./Home.css";
+import danceImage from "../assets/Picture2.png"; // Importing the image
 
 const Home = () => {
 	return (
-		<section className='slider_section'>
-			<div className='carousel'>
-				<div className='carousel-item active'>
-					<div className='container'>
-						<div className='row'>
-							{/* Left Side - Text Content */}
-							<div className='col-md-6'>
-								<div className='detail-box'>
-									<h1>
-										Crypto <br />
-										Currency
-									</h1>
-									<p>
-										Explicabo esse amet tempora quibusdam laudantium, laborum
-										eaque magnam fugiat hic? Esse dicta aliquid error
-										repudiandae earum suscipit fugiat molestias, veniam, vel
-										architecto veritatis delectus repellat modi impedit sequi.
-									</p>
-									<div className='btn-box'>
-										<a
-											href='/'
-											className='btn1'>
-											Read More
-										</a>
-									</div>
-								</div>
-							</div>
-
-							{/* Right Side - Image */}
-							<div className='col-md-6'>
-								<div className='img-box'>
-									<img
-										src='images/slider-img.png'
-										alt='Crypto Currency'
-									/>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+		<div className='home-container'>
+			<div className='text-container'>
+				<p className='title'>Groove wherever you want!!</p>
+				<h1 className='subtitle'>
+					Get your moves so accurate that anyone can't even compare to you!
+					HAHAHA
+				</h1>
+				<a
+					href='https://github.com/kashyapanjali/HACK_FOR_TOMORROW/tree/strings/STRINGS'
+					target='_blank'
+					rel='noopener noreferrer'>
+					<button className='read-more-btn'>Read more about this app</button>
+				</a>
 			</div>
-		</section>
+
+			<div className='image-container'>
+				<img
+					src={danceImage}
+					alt='Dancing bro'
+					className='dance-image'
+				/>
+			</div>
+		</div>
 	);
 };
 
