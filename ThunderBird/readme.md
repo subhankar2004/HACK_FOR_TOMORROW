@@ -20,4 +20,4 @@ Quantum-secured space communication system
 
 
 ## License
-&copy; 2025 IGIT Club Management System. All rights reserved.
+&copy; 2025  Thunder Bird. All rights reserved.
